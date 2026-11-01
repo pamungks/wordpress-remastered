@@ -1,0 +1,42 @@
+name: Release
+
+# Tag a version (vX.Y.Z) -> build the installable zip -> publish a GitHub Release.
+# That release zip is the "ready package" pushed to a client's host.
+# Today there is no build step yet, so we archive the tracked tree as-is.
+# When the plugin + theme build exists, build it and zip the built artifact instead.
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build + publish package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build package zip
+        run: |
+          set -e
+          TAG="${GITHUB_REF_NAME}"
+          OUT="wordpress-remastered-${TAG}.zip"
+          # git archive respects .gitattributes export-ignore, so dev-only
+          # files can be excluded from the package later without touching this.
+          git archive --format=zip --prefix=wordpress-remastered/ -o "$OUT" HEAD
+          echo "OUT=$OUT" >> "$GITHUB_ENV"
+          ls -lh "$OUT"
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "${GITHUB_REF_NAME}" \
+            --generate-notes \
+            "${OUT}"

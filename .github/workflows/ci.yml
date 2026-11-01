@@ -1,0 +1,59 @@
+name: CI
+
+# Runs on every PR into main. This is the review/CI gate from WORKFLOW.md.
+# Right now there is no PHP/JS yet, so this only validates the project docs.
+# When the plugin + theme land, add the PHP and JS lint jobs below.
+
+on:
+  pull_request:
+    branches: [main]
+  # Allow running by hand from the Actions tab while bootstrapping.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  docs:
+    name: Docs present
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Required files exist
+        run: |
+          set -e
+          for f in CONTEXT.md WORKFLOW.md README.md LICENSE; do
+            if [ ! -f "$f" ]; then
+              echo "::error::missing required file: $f"
+              exit 1
+            fi
+          done
+          if [ -z "$(ls -A docs/adr/*.md 2>/dev/null)" ]; then
+            echo "::error::no ADRs found in docs/adr/"
+            exit 1
+          fi
+          echo "All required docs present."
+
+  # --- Add when code lands (see WORKFLOW.md "On PR: lint + PHP/JS checks") ---
+  #
+  # php:
+  #   name: PHP lint + coding standards
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: shivammathur/setup-php@v2
+  #       with: { php-version: '8.2', tools: composer, phpcs }
+  #     - run: composer install --no-interaction --prefer-dist
+  #     - run: vendor/bin/phpcs
+  #
+  # js:
+  #   name: JS lint + build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with: { node-version: '20', cache: 'npm' }
+  #     - run: npm ci
+  #     - run: npm run lint
+  #     - run: npm run build
