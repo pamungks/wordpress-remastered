@@ -7,4 +7,5 @@
 /.gitignore     export-ignore
 /.scratch       export-ignore
 /docs           export-ignore
+CLAUDE.md       export-ignore
 WORKFLOW.md     export-ignore
