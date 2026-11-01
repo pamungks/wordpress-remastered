@@ -1,0 +1,31 @@
+# Dependencies
+/node_modules/
+/vendor/
+
+# Build output
+/build/
+/dist/
+*.zip
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# WordPress dev (wp-env / local)
+/wordpress/
+/.wp-env.override.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Scratch
+/.scratch/
