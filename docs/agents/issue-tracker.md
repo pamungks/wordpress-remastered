@@ -48,7 +48,7 @@ Used by `/wayfinder`. The **map** is a single issue with **child** issues as tic
 
 These apply when a skill opens PRs, writes commits, or cuts releases here:
 
-- **Branch per change → PR → merge.** No direct commits to `main`. Claude opens PRs; the owner reviews and merges.
+- **Branch per change → PR → merge.** No direct commits to `main`. Claude opens PRs; the owner approves in chat; only then Claude squash-merges (`gh pr merge --squash --auto --delete-branch`).
 - **Conventional Commits**: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`, `test:`.
 - **Releases are tagged** (`vX.Y.Z`); a GitHub Action builds the package zip and publishes a GitHub Release.
 - **Scope**: issues here are about building the tools (`remastered`, `cockpit`). Client sites are delivered as the release package and are **not** tracked in any repo, so they never get issues here.
