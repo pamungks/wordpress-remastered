@@ -19,7 +19,18 @@ Business code (clients, invoices) stays in `cockpit`, never in the public repo.
 - `main` is always shippable.
 - Every change goes on a short branch → Pull Request → merge. No direct commits to `main`.
 - The PR exists even though we are solo: it is the review gate, the CI gate, and a clean history.
-- **Claude opens PRs. The owner reviews and merges.** `main` stays under the owner's control.
+- **Claude opens PRs. The owner reviews and approves; Claude squash-merges.** `main` stays under
+  the owner's control: nothing merges without the owner's approval.
+  - GitHub won't let the owner approve a PR opened from their own account, so the approval is the
+    owner saying so in chat, not a GitHub review.
+  - Claude turns on squash auto-merge when it opens each PR, and merges once the owner approves.
+
+### `main` protection (ruleset)
+
+- A pull request is required; 0 GitHub approvals (see above for why).
+- Required status checks: `Docs present` and `E2E (wp-env + Playwright)`. These are the CI
+  **job names**, not the `CI / … (pull_request)` label the PR page shows. Rename a job and the
+  ruleset must change with it, or every PR waits forever on a check that never reports.
 
 ### Commits
 
@@ -67,7 +78,7 @@ The route is **idea → ship**, following the Matt Pocock skills.
 - **`CONTEXT.md` + ADRs are the shared memory.** Keep them current — update CONTEXT when a term
   is settled, add an ADR when a hard-to-reverse decision is made.
 - **`/code-review` before every merge** — two axes: follows standards + matches the spec.
-- **Claude opens PRs; the owner reviews and merges.**
+- **Claude opens PRs; the owner approves; Claude squash-merges.**
 
 ### One-time precondition
 
