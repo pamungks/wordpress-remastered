@@ -1,0 +1,20 @@
+{
+	"name": "wordpress-remastered",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Development harness for the WordPress Remastered distribution: boots a real WordPress via wp-env with the plugin and block theme active, and tests it at the browser level with Playwright.",
+	"license": "GPL-2.0-or-later",
+	"author": "Bagus Pamungkas",
+	"scripts": {
+		"env:start": "node scripts/wp-env.cjs start --update",
+		"env:stop": "node scripts/wp-env.cjs stop",
+		"env:clean": "node scripts/wp-env.cjs clean all",
+		"env:activate": "node scripts/wp-env.cjs run cli wp theme activate remastered",
+		"test:e2e": "playwright test",
+		"test": "npm run env:start && npm run env:activate && npm run test:e2e"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.49.0",
+		"@wordpress/env": "^10.10.0"
+	}
+}

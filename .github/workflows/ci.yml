@@ -35,7 +35,43 @@ jobs:
           fi
           echo "All required docs present."
 
-  # --- Add when code lands (see WORKFLOW.md "On PR: lint + PHP/JS checks") ---
+  e2e:
+    name: E2E (wp-env + Playwright)
+    runs-on: ubuntu-latest
+    # ubuntu-latest ships with Docker, which wp-env needs to boot WordPress.
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Boot WordPress (stock core + Remastered plugin & theme)
+        run: npm run env:start
+
+      - name: Activate the Remastered block theme
+        run: npm run env:activate
+
+      - name: Run the browser-level test suite
+        run: npm run test:e2e
+
+      - name: Upload Playwright report on failure
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # --- PHP lint + coding standards: add when the plugin grows real PHP ---
+  # (see WORKFLOW.md "On PR: lint + PHP/JS checks")
   #
   # php:
   #   name: PHP lint + coding standards
@@ -46,14 +82,3 @@ jobs:
   #       with: { php-version: '8.2', tools: composer, phpcs }
   #     - run: composer install --no-interaction --prefer-dist
   #     - run: vendor/bin/phpcs
-  #
-  # js:
-  #   name: JS lint + build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with: { node-version: '20', cache: 'npm' }
-  #     - run: npm ci
-  #     - run: npm run lint
-  #     - run: npm run build

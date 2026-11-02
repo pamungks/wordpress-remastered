@@ -9,3 +9,11 @@
 /docs           export-ignore
 CLAUDE.md       export-ignore
 WORKFLOW.md     export-ignore
+
+# Dev harness (wp-env + Playwright) — not part of the installable package.
+/tests               export-ignore
+/scripts             export-ignore
+.wp-env.json         export-ignore
+playwright.config.ts export-ignore
+package.json         export-ignore
+package-lock.json    export-ignore
