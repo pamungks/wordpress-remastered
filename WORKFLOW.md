@@ -23,7 +23,9 @@ Business code (clients, invoices) stays in `cockpit`, never in the public repo.
   the owner's control: nothing merges without the owner's approval.
   - GitHub won't let the owner approve a PR opened from their own account, so the approval is the
     owner saying so in chat, not a GitHub review.
-  - Claude turns on squash auto-merge when it opens each PR, and merges once the owner approves.
+  - On approval Claude runs `gh pr merge --squash --auto --delete-branch`: it merges now if CI
+    is green, or as soon as CI finishes. Auto-merge is never turned on *before* approval —
+    with 0 required GitHub approvals it would merge on green CI alone.
 
 ### `main` protection (ruleset)
 
